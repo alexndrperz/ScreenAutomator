@@ -1,0 +1,32 @@
+[
+  {
+    "image": {
+      "path": "assets/target.png",
+      "waypoints": [
+        { "x": 200, "y": 300 },
+        { "x": 400, "y": 300 },
+        { "x": 400, "y": 500 }
+      ]
+    },
+    "trigger": {
+      "x": 960,
+      "y": 540,
+      "speed": 0.4,
+      "click_type": "left"
+    }
+  },
+  {
+    "image": {
+      "path": "assets/button.png",
+      "waypoints": [
+        { "x": 100, "y": 100 }
+      ]
+    },
+    "trigger": {
+      "x": 760,
+      "y": 440,
+      "speed": 0.2,
+      "click_type": "double"
+    }
+  }
+]
