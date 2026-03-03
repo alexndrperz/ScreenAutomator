@@ -1,24 +1,24 @@
-from typing import Optional, List
+from typing import Optional
 
 import pyautogui
 
-from .models import Waypoint
+from .models import SearchRegion
 
 
 class ImageLocator:
     CONFIDENCE = 0.85
 
-    def find_center(self, image_path: str, waypoints: List[Waypoint]) -> Optional[Waypoint]:
-        region = self._to_region(waypoints) if waypoints else None
-        result = self._locate(image_path, region)
-        return Waypoint(result.x, result.y) if result else None
+    def exists_on_screen(self, image_path: str, region: Optional[SearchRegion]) -> bool:
+        search_region = self._to_region(region) if region else None
+        return self._locate(image_path, search_region) is not None
 
-    def _to_region(self, waypoints: List[Waypoint]) -> tuple:
-        x1 = int(min(wp.x for wp in waypoints))
-        y1 = int(min(wp.y for wp in waypoints))
-        x2 = int(max(wp.x for wp in waypoints))
-        y2 = int(max(wp.y for wp in waypoints))
-        return (x1, y1, x2 - x1, y2 - y1)
+    def _to_region(self, region: SearchRegion) -> tuple:
+        return (
+            int(region.x1),
+            int(region.y1),
+            int(region.x2 - region.x1),
+            int(region.y2 - region.y1)
+        )
 
     def _locate(self, path: str, region: Optional[tuple]) -> Optional[object]:
         try:

@@ -1,25 +1,28 @@
 import json
-from typing import List
+from typing import List, Optional
 
-from .models import Waypoint, ImageConfig, TriggerConfig, AutomationConfig
+from .models import SearchRegion, ImageConfig, TriggerConfig, AutomationConfig
 
 
-class WaypointParser:
-    def from_dict(self, data: dict) -> Waypoint:
-        return Waypoint(x=data["x"], y=data["y"])
-
-    def from_list(self, items: list) -> List[Waypoint]:
-        return [self.from_dict(item) for item in items]
+class SearchRegionParser:
+    def parse(self, data: dict) -> SearchRegion:
+        return SearchRegion(
+            x1=float(data["x1"]),
+            y1=float(data["y1"]),
+            x2=float(data["x2"]),
+            y2=float(data["y2"])
+        )
 
 
 class ImageConfigParser:
     def __init__(self) -> None:
-        self._wp = WaypointParser()
+        self._region_parser = SearchRegionParser()
 
     def parse(self, data: dict) -> ImageConfig:
+        region_data = data.get("search_region")
         return ImageConfig(
             path=data["path"],
-            waypoints=self._wp.from_list(data.get("waypoints", []))
+            search_region=self._region_parser.parse(region_data) if region_data else None
         )
 
 

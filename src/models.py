@@ -1,5 +1,5 @@
-from dataclasses import dataclass, field
-from typing import List
+from dataclasses import dataclass
+from typing import Optional
 
 
 @dataclass
@@ -9,9 +9,17 @@ class Waypoint:
 
 
 @dataclass
+class SearchRegion:
+    x1: float  # esquina superior-izquierda
+    y1: float  # esquina superior-izquierda
+    x2: float  # esquina inferior-derecha
+    y2: float  # esquina inferior-derecha
+
+
+@dataclass
 class ImageConfig:
     path: str
-    waypoints: List[Waypoint] = field(default_factory=list)
+    search_region: Optional[SearchRegion] = None
 
 
 @dataclass

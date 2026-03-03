@@ -2,7 +2,7 @@ from .config_loader import ConfigLoader
 from .image_locator import ImageLocator
 from .click_handler import ClickHandler
 from .mouse_controller import MouseController
-from .models import AutomationConfig, ImageConfig, TriggerConfig
+from .models import AutomationConfig, ImageConfig, TriggerConfig, Waypoint
 
 
 class AutomationRunner:
@@ -17,13 +17,13 @@ class AutomationRunner:
             self._execute(config)
 
     def _execute(self, config: AutomationConfig) -> None:
-        self._go_to_image(config.image)
-        self._fire(config.trigger)
+        if self._image_found(config.image):
+            self._fire(config.trigger)
 
-    def _go_to_image(self, image_cfg: ImageConfig) -> None:
-        location = self._locator.find_center(image_cfg.path, image_cfg.waypoints)
-        if location:
-            self._mouse.move_to(location)
+    def _image_found(self, image_cfg: ImageConfig) -> bool:
+        return self._locator.exists_on_screen(image_cfg.path, image_cfg.search_region)
 
     def _fire(self, trigger: TriggerConfig) -> None:
+        target = Waypoint(trigger.x, trigger.y)
+        self._mouse.move_to(target, trigger.speed)
         self._mouse.click_at(trigger.x, trigger.y, trigger.click_type)

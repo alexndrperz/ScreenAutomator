@@ -1,7 +1,7 @@
 # PyAutoGUI Automation
 
 Herramienta de automatización de mouse impulsada por JSON usando PyAutoGUI.
-Detecta imágenes en pantalla, recorre waypoints y ejecuta eventos de click configurables.
+Detecta imágenes en una región de pantalla y ejecuta eventos de click configurables.
 
 ---
 
@@ -55,11 +55,12 @@ Cada objeto representa una secuencia independiente que se ejecuta en orden.
   {
     "image": {
       "path": "assets/target.png",
-      "waypoints": [
-        { "x": 200, "y": 300 },
-        { "x": 400, "y": 300 },
-        { "x": 400, "y": 500 }
-      ]
+      "search_region": {
+        "x1": 100,
+        "y1": 100,
+        "x2": 800,
+        "y2": 600
+      }
     },
     "trigger": {
       "x": 960,
@@ -73,14 +74,19 @@ Cada objeto representa una secuencia independiente que se ejecuta en orden.
 
 ### Propiedades
 
-| Propiedad           | Tipo     | Descripción                                              |
-|---------------------|----------|----------------------------------------------------------|
-| `image.path`        | `string` | Ruta al archivo de imagen a detectar en pantalla         |
-| `image.waypoints`   | `array`  | Dos puntos `{x, y}` que definen la región de pantalla donde se busca la imagen (esquina superior-izquierda y esquina inferior-derecha) |
-| `trigger.x`         | `number` | Coordenada X donde se ejecuta el click final             |
-| `trigger.y`         | `number` | Coordenada Y donde se ejecuta el click final             |
-| `trigger.speed`     | `number` | Duración del movimiento entre puntos (segundos)          |
-| `trigger.click_type`| `string` | Tipo de click: `left`, `right`, `middle`, `double`       |
+| Propiedad                    | Tipo     | Descripción                                                        |
+|------------------------------|----------|--------------------------------------------------------------------|
+| `image.path`                 | `string` | Ruta al archivo de imagen a detectar en pantalla                   |
+| `image.search_region.x1`     | `number` | Coordenada X de la esquina superior-izquierda de la región         |
+| `image.search_region.y1`     | `number` | Coordenada Y de la esquina superior-izquierda de la región         |
+| `image.search_region.x2`     | `number` | Coordenada X de la esquina inferior-derecha de la región           |
+| `image.search_region.y2`     | `number` | Coordenada Y de la esquina inferior-derecha de la región           |
+| `trigger.x`                  | `number` | Coordenada X donde se mueve el mouse y se ejecuta el click         |
+| `trigger.y`                  | `number` | Coordenada Y donde se mueve el mouse y se ejecuta el click         |
+| `trigger.speed`              | `number` | Duración del movimiento del mouse hacia el trigger (segundos)      |
+| `trigger.click_type`         | `string` | Tipo de click: `left`, `right`, `middle`, `double`                 |
+
+> `search_region` es opcional. Si se omite, la búsqueda se realiza en toda la pantalla.
 
 ### Tipos de click
 
@@ -97,10 +103,9 @@ Cada objeto representa una secuencia independiente que se ejecuta en orden.
 
 Por cada objeto en el JSON:
 
-1. **Detecta** la imagen en pantalla usando `image.path`
-2. Si la encuentra, **mueve** el mouse a esa posición
-3. **Recorre** los `waypoints` en orden con la velocidad `trigger.speed`
-4. **Ejecuta** el click en `(trigger.x, trigger.y)` con `trigger.click_type`
+1. **Busca** la imagen (`image.path`) dentro de la región definida por `search_region`
+2. Si la encuentra, **mueve** el mouse a `(trigger.x, trigger.y)` con `trigger.speed`
+3. **Ejecuta** el click en esa posición con `trigger.click_type`
 
 ---
 
@@ -108,11 +113,11 @@ Por cada objeto en el JSON:
 
 ```
 AutomationRunner
-├── ConfigLoader          ← lee JSON y construye los modelos
+├── ConfigLoader           ← lee JSON y construye los modelos
 │   ├── ImageConfigParser
-│   │   └── WaypointParser
+│   │   └── SearchRegionParser
 │   └── TriggerConfigParser
-├── ImageLocator          ← busca la imagen en pantalla
-└── MouseController       ← mueve el mouse y dispara clicks
-    └── ClickHandler      ← resuelve el tipo de click
+├── ImageLocator           ← busca la imagen en la región de pantalla
+└── MouseController        ← mueve el mouse y dispara clicks
+    └── ClickHandler       ← resuelve el tipo de click
 ```

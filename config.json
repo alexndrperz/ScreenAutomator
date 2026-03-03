@@ -2,10 +2,12 @@
   {
     "image": {
       "path": "assets/target.png",
-      "waypoints": [
-        { "x": 100, "y": 100 },
-        { "x": 800, "y": 600 }
-      ]
+      "search_region": {
+        "x1": 100,
+        "y1": 100,
+        "x2": 800,
+        "y2": 600
+      }
     },
     "trigger": {
       "x": 960,
@@ -17,10 +19,12 @@
   {
     "image": {
       "path": "assets/button.png",
-      "waypoints": [
-        { "x": 600, "y": 300 },
-        { "x": 1200, "y": 700 }
-      ]
+      "search_region": {
+        "x1": 600,
+        "y1": 300,
+        "x2": 1200,
+        "y2": 700
+      }
     },
     "trigger": {
       "x": 760,
