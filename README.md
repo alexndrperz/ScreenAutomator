@@ -76,7 +76,7 @@ Cada objeto representa una secuencia independiente que se ejecuta en orden.
 | Propiedad           | Tipo     | Descripción                                              |
 |---------------------|----------|----------------------------------------------------------|
 | `image.path`        | `string` | Ruta al archivo de imagen a detectar en pantalla         |
-| `image.waypoints`   | `array`  | Lista de coordenadas `{x, y}` que recorrerá el mouse     |
+| `image.waypoints`   | `array`  | Dos puntos `{x, y}` que definen la región de pantalla donde se busca la imagen (esquina superior-izquierda y esquina inferior-derecha) |
 | `trigger.x`         | `number` | Coordenada X donde se ejecuta el click final             |
 | `trigger.y`         | `number` | Coordenada Y donde se ejecuta el click final             |
 | `trigger.speed`     | `number` | Duración del movimiento entre puntos (segundos)          |

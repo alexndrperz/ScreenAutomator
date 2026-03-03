@@ -3,9 +3,8 @@
     "image": {
       "path": "assets/target.png",
       "waypoints": [
-        { "x": 200, "y": 300 },
-        { "x": 400, "y": 300 },
-        { "x": 400, "y": 500 }
+        { "x": 100, "y": 100 },
+        { "x": 800, "y": 600 }
       ]
     },
     "trigger": {
@@ -19,7 +18,8 @@
     "image": {
       "path": "assets/button.png",
       "waypoints": [
-        { "x": 100, "y": 100 }
+        { "x": 600, "y": 300 },
+        { "x": 1200, "y": 700 }
       ]
     },
     "trigger": {

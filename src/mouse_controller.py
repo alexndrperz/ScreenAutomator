@@ -1,5 +1,3 @@
-from typing import List
-
 import pyautogui
 
 from .models import Waypoint
@@ -15,7 +13,3 @@ class MouseController:
 
     def click_at(self, x: float, y: float, click_type: str) -> None:
         self._clicker.perform(x, y, click_type)
-
-    def trace_path(self, waypoints: List[Waypoint], speed: float) -> None:
-        for point in waypoints:
-            self.move_to(point, duration=speed)
