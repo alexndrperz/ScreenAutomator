@@ -5,8 +5,17 @@ from .models import SearchRegion, ImageConfig, TriggerConfig, AutomationConfig
 
 
 class SearchRegionParser:
+    """Convierte un dict del JSON en un modelo SearchRegion."""
+
     def parse(self, data: dict) -> SearchRegion:
-        """Convierte un dict con x1/y1/x2/y2 en un SearchRegion."""
+        """Construye un SearchRegion a partir de un dict con claves x1/y1/x2/y2.
+
+        Args:
+            data: Dict con las claves 'x1', 'y1', 'x2', 'y2'.
+
+        Returns:
+            Instancia de SearchRegion con las coordenadas convertidas a float.
+        """
         return SearchRegion(
             x1=float(data["x1"]),
             y1=float(data["y1"]),
@@ -16,11 +25,20 @@ class SearchRegionParser:
 
 
 class ImageConfigParser:
+    """Convierte el bloque 'image' del JSON en un modelo ImageConfig."""
+
     def __init__(self) -> None:
         self._region_parser = SearchRegionParser()
 
     def parse(self, data: dict) -> ImageConfig:
-        """Extrae la ruta de imagen y la región de búsqueda opcional."""
+        """Extrae la ruta de imagen y la región de búsqueda opcional.
+
+        Args:
+            data: Dict con la clave 'path' y opcionalmente 'search_region'.
+
+        Returns:
+            Instancia de ImageConfig. search_region será None si no está definido en el JSON.
+        """
         region_data = data.get("search_region")
         return ImageConfig(
             path=data["path"],
@@ -29,8 +47,17 @@ class ImageConfigParser:
 
 
 class TriggerConfigParser:
+    """Convierte el bloque 'trigger' del JSON en un modelo TriggerConfig."""
+
     def parse(self, data: dict) -> TriggerConfig:
-        """Convierte el dict del trigger en su modelo tipado."""
+        """Construye un TriggerConfig desde un dict con las propiedades del trigger.
+
+        Args:
+            data: Dict con las claves 'x', 'y', 'speed' y 'click_type'.
+
+        Returns:
+            Instancia de TriggerConfig con los valores tipados.
+        """
         return TriggerConfig(
             x=float(data["x"]),
             y=float(data["y"]),
@@ -40,22 +67,45 @@ class TriggerConfigParser:
 
 
 class ConfigLoader:
+    """Lee el archivo JSON y produce la lista de automatizaciones a ejecutar."""
+
     def __init__(self) -> None:
         self._image_parser = ImageConfigParser()
         self._trigger_parser = TriggerConfigParser()
 
     def load(self, path: str) -> List[AutomationConfig]:
-        """Lee el JSON y retorna la lista de configuraciones de automatización."""
+        """Lee el archivo JSON y retorna todas las configuraciones de automatización.
+
+        Args:
+            path: Ruta al archivo JSON que contiene la lista de automatizaciones.
+
+        Returns:
+            Lista de AutomationConfig, una por cada objeto del JSON.
+        """
         data = self._read_json(path)
         return [self._assemble(item) for item in data]
 
     def _read_json(self, path: str) -> list:
-        """Abre y deserializa el archivo JSON."""
+        """Abre y deserializa el archivo JSON.
+
+        Args:
+            path: Ruta al archivo JSON.
+
+        Returns:
+            Lista de dicts crudos tal como están en el archivo.
+        """
         with open(path, "r", encoding="utf-8") as f:
             return json.load(f)
 
     def _assemble(self, data: dict) -> AutomationConfig:
-        """Construye un AutomationConfig a partir de un objeto del JSON."""
+        """Construye un AutomationConfig completo a partir de un objeto del JSON.
+
+        Args:
+            data: Dict con las claves 'image' y 'trigger'.
+
+        Returns:
+            Instancia de AutomationConfig lista para ejecutar.
+        """
         return AutomationConfig(
             image=self._image_parser.parse(data["image"]),
             trigger=self._trigger_parser.parse(data["trigger"])
