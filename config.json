@@ -4,35 +4,17 @@
     "image": {
       "path": "assets/target.png",
       "search_region": {
-        "x1": 100,
+        "x1": 1500,
         "y1": 100,
-        "x2": 800,
-        "y2": 600
+        "x2": 1700,
+        "y2": 900
       }
     },
     "trigger": {
-      "x": 960,
+      "x": 1500,
       "y": 540,
       "speed": 0.4,
       "click_type": "left"
-    }
-  },
-  {
-    "debug": false,
-    "image": {
-      "path": "assets/button.png",
-      "search_region": {
-        "x1": 600,
-        "y1": 300,
-        "x2": 1200,
-        "y2": 700
-      }
-    },
-    "trigger": {
-      "x": 760,
-      "y": 440,
-      "speed": 0.2,
-      "click_type": "double"
     }
   }
 ]
