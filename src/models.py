@@ -65,6 +65,8 @@ class AutomationConfig:
     Attributes:
         image:   Configuración de la imagen a detectar.
         trigger: Configuración del evento click a ejecutar si la imagen es encontrada.
+        debug:   Si es True, toma un screenshot marcando las regiones en lugar de ejecutar.
     """
     image: ImageConfig
     trigger: TriggerConfig
+    debug: bool = False

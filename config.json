@@ -1,5 +1,6 @@
 [
   {
+    "debug": true,
     "image": {
       "path": "assets/target.png",
       "search_region": {
@@ -17,6 +18,7 @@
     }
   },
   {
+    "debug": false,
     "image": {
       "path": "assets/button.png",
       "search_region": {

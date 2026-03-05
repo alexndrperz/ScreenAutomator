@@ -1,0 +1,11 @@
+# Screenshots de debug generados en tiempo de ejecución
+debug/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+venv/
+.venv/

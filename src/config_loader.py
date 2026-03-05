@@ -52,5 +52,6 @@ class ConfigLoader:
     def _assemble(self, data: dict) -> AutomationConfig:
         return AutomationConfig(
             image=self._image_parser.parse(data["image"]),
-            trigger=self._trigger_parser.parse(data["trigger"])
+            trigger=self._trigger_parser.parse(data["trigger"]),
+            debug=bool(data.get("debug", False))
         )
