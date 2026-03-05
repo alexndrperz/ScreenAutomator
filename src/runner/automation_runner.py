@@ -1,9 +1,9 @@
+from ..models import AutomationConfig, ImageConfig, TriggerConfig, Waypoint
+from ..debugger.debug_visualizer import DebugVisualizer
 from .config_loader import ConfigLoader
 from .image_locator import ImageLocator
 from .click_handler import ClickHandler
 from .mouse_controller import MouseController
-from .debug_visualizer import DebugVisualizer
-from .models import AutomationConfig, ImageConfig, TriggerConfig, Waypoint
 
 
 class AutomationRunner:

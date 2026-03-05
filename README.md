@@ -9,19 +9,27 @@ Detecta imágenes en una región de pantalla y ejecuta eventos de click configur
 
 ```
 prueba/
-├── main.py                   # Punto de entrada
-├── config.json               # Lista de automatizaciones
+├── main.py                              # Punto de entrada
+├── config.json                          # Lista de automatizaciones
 ├── .gitignore
 ├── README.md
-├── debug/                    # Screenshots generados en modo debug (ignorado por git)
+├── debug/                               # Screenshots generados en modo debug (ignorado por git)
 └── src/
-    ├── models.py             # Modelos de datos (dataclasses)
-    ├── config_loader.py      # Parseo del JSON
-    ├── image_locator.py      # Detección de imagen en pantalla
-    ├── click_handler.py      # Resolución del tipo de click
-    ├── mouse_controller.py   # Movimiento y clicks del mouse
-    ├── debug_visualizer.py   # Captura y marcado visual de coordenadas
-    └── automation_runner.py  # Orquestador principal
+    ├── models.py                        # Modelos de datos compartidos (dataclasses)
+    ├── runner/                          # Lógica de ejecución de automatizaciones
+    │   ├── search_region_parser.py      # Parsea el bloque search_region del JSON
+    │   ├── image_config_parser.py       # Parsea el bloque image del JSON
+    │   ├── trigger_config_parser.py     # Parsea el bloque trigger del JSON
+    │   ├── config_loader.py             # Carga el archivo JSON completo
+    │   ├── image_locator.py             # Detecta imagen en pantalla
+    │   ├── click_handler.py             # Resuelve y ejecuta el tipo de click
+    │   ├── mouse_controller.py          # Controla movimiento y clicks del mouse
+    │   └── automation_runner.py         # Orquestador principal
+    └── debugger/                        # Lógica del modo debug
+        ├── screenshooter.py             # Captura la pantalla
+        ├── region_renderer.py           # Dibuja rectángulos sobre la imagen
+        ├── debug_saver.py               # Guarda el screenshot en debug/
+        └── debug_visualizer.py          # Orquesta el flujo de debug
 ```
 
 ---
@@ -142,16 +150,22 @@ Para cada automatización en el JSON:
 ## Arquitectura
 
 ```
-AutomationRunner
-├── ConfigLoader           ← lee JSON y construye los modelos
-│   ├── ImageConfigParser
-│   │   └── SearchRegionParser
-│   └── TriggerConfigParser
-├── ImageLocator           ← busca la imagen en la región de pantalla
-├── MouseController        ← mueve el mouse y dispara clicks
-│   └── ClickHandler       ← resuelve el tipo de click
-└── DebugVisualizer        ← modo debug: screenshot + marcado visual
-    ├── Screenshooter      ← captura la pantalla
-    ├── RegionRenderer     ← dibuja los rectángulos verde y azul
-    └── DebugSaver         ← guarda el PNG en debug/
+src/
+├── models.py                    (compartido por runner y debugger)
+│
+├── runner/
+│   ├── AutomationRunner         ← orquestador principal
+│   ├── ConfigLoader             ← ensambla la config desde el JSON
+│   │   ├── ImageConfigParser
+│   │   │   └── SearchRegionParser
+│   │   └── TriggerConfigParser
+│   ├── ImageLocator             ← busca la imagen en pantalla
+│   └── MouseController          ← mueve el mouse y dispara clicks
+│       └── ClickHandler         ← resuelve el tipo de click
+│
+└── debugger/
+    ├── DebugVisualizer          ← orquesta el flujo de debug
+    ├── Screenshooter            ← captura la pantalla
+    ├── RegionRenderer           ← dibuja rectángulos verde y azul
+    └── DebugSaver               ← guarda el PNG en debug/
 ```
