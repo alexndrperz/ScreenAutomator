@@ -4,14 +4,14 @@
     "image": {
       "path": "assets/target.png",
       "search_region": {
-        "x1": 1500,
+        "x1": 800,
         "y1": 100,
-        "x2": 1700,
+        "x2": 1100,
         "y2": 900
       }
     },
     "trigger": {
-      "x": 1500,
+      "x": 1850,
       "y": 540,
       "speed": 0.4,
       "click_type": "left"
