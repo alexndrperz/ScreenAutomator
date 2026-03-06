@@ -1,8 +1,8 @@
 [
   {
-    "debug": true,
+    "debug": false,
     "image": {
-      "path": "assets/target.png",
+      "path": "assets\\target.png",
       "search_region": {
         "x1": 800,
         "y1": 100,

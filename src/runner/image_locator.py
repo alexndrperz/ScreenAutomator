@@ -1,3 +1,5 @@
+from importlib.resources import path
+import os
 from typing import Optional
 
 import pyautogui
@@ -27,6 +29,9 @@ class ImageLocator:
     def _locate(self, path: str, region: Optional[tuple]) -> Optional[object]:
         """Ejecuta la búsqueda de imagen en pantalla con pyautogui."""
         try:
-            return pyautogui.locateCenterOnScreen(path, confidence=self.CONFIDENCE, region=region)
-        except Exception:
+            base_path = os.getcwd()  
+            transformed_path = os.path.join(base_path, "runner", path)
+            return pyautogui.locateCenterOnScreen(transformed_path, confidence=self.CONFIDENCE, region=region)
+        except Exception as e:
+            print(f"Error al buscar la imagen '{path}': {e}")
             return None
