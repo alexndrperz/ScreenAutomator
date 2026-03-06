@@ -12,7 +12,7 @@
     },
     "trigger": {
       "x": 1850,
-      "y": 540,
+      "y": 740,
       "speed": 0.4,
       "click_type": "left"
     }
