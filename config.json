@@ -4,9 +4,9 @@
     "image": {
       "path": "assets\\target.png",
       "search_region": {
-        "x1": 1550,
+        "x1": 980,
         "y1": 100,
-        "x2": 1650,
+        "x2": 1100,
         "y2": 900
       }
     },

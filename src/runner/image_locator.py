@@ -1,4 +1,5 @@
 import os
+import time
 from typing import Optional
 
 import pyautogui
@@ -10,6 +11,16 @@ class ImageLocator:
     """Busca una imagen en pantalla, opcionalmente dentro de una región."""
 
     CONFIDENCE = 0.85
+    INTERVALO_REINTENTO = 1  # segundos entre reintentos
+
+    def esperar_hasta_encontrar(self, image_path: str, region: Optional[SearchRegion]) -> bool:
+        """Busca la imagen cada segundo hasta encontrarla en pantalla."""
+        search_region = self._to_region(region) if region else None
+        while True:
+            if self._locate(image_path, search_region) is not None:
+                print(f"Imagen '{image_path}' encontrada en pantalla.")
+                return True
+            time.sleep(self.INTERVALO_REINTENTO)
 
     def exists_on_screen(self, image_path: str, region: Optional[SearchRegion]) -> bool:
         """Indica si la imagen es visible en el área de pantalla especificada."""

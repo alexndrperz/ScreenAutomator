@@ -1,9 +1,14 @@
+import time
+
 from ..models import AutomationConfig, ImageConfig, TriggerConfig, Waypoint
 from ..debugger.debug_visualizer import DebugVisualizer
 from .config_loader import ConfigLoader
 from .image_locator import ImageLocator
 from .click_handler import ClickHandler
 from .mouse_controller import MouseController
+
+
+ESPERA_ENTRE_CICLOS = 60  # segundos entre repeticiones del ciclo completo
 
 
 class AutomationRunner:
@@ -16,22 +21,28 @@ class AutomationRunner:
         self._visualizer = DebugVisualizer()
 
     def run(self, json_path: str) -> None:
-        """Carga el JSON y ejecuta cada automatización en orden."""
+        """Carga el JSON y repite el ciclo indefinidamente, esperando 1 minuto entre cada pasada."""
         configs = self._loader.load(json_path)
-        for index, config in enumerate(configs):
-            self._execute(config, index)
+        while True:
+            for index, config in enumerate(configs):
+                self._execute(config, index)
+            self._esperar_ciclo()
+
+    def _esperar_ciclo(self) -> None:
+        """Espera 1 minuto antes de reiniciar el ciclo completo."""
+        time.sleep(ESPERA_ENTRE_CICLOS)
 
     def _execute(self, config: AutomationConfig, index: int) -> None:
         """Despacha la automatización: modo debug o ejecución normal."""
         if config.debug:
             self._visualizer.visualize(config, index)
             return
-        if self._image_found(config.image):
+        if self._esperar_imagen(config.image):
             self._fire(config.trigger)
 
-    def _image_found(self, image_cfg: ImageConfig) -> bool:
-        """Verifica si la imagen está visible en la región de pantalla configurada."""
-        return self._locator.exists_on_screen(image_cfg.path, image_cfg.search_region)
+    def _esperar_imagen(self, image_cfg: ImageConfig) -> bool:
+        """Espera hasta que la imagen sea visible en pantalla, reintentando cada segundo."""
+        return self._locator.esperar_hasta_encontrar(image_cfg.path, image_cfg.search_region)
 
     def _fire(self, trigger: TriggerConfig) -> None:
         """Mueve el mouse al trigger y ejecuta el click configurado."""
