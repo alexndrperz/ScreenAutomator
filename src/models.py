@@ -1,5 +1,5 @@
-from dataclasses import dataclass
-from typing import Optional
+from dataclasses import dataclass, field
+from typing import List, Optional
 
 
 @dataclass
@@ -27,16 +27,25 @@ class ImageConfig:
 
 @dataclass
 class TriggerConfig:
-    """Define la posición, velocidad y tipo del evento click a ejecutar."""
+    """Define la posición, velocidad, tipo del evento click y delay previo a ejecutar."""
     x: float
     y: float
     speed: float
     click_type: str
+    time: float = 0  # segundos de espera desde el trigger anterior
+
+
+@dataclass
+class ConstantKeyword:
+    """Combinación de teclas a presionar repetidamente en segundo plano."""
+    keys: List[str]
+    interval_seconds: float
 
 
 @dataclass
 class AutomationConfig:
-    """Configuración completa de una automatización: imagen, trigger y modo debug."""
+    """Configuración completa de una automatización: imagen, triggers y modo debug."""
     image: ImageConfig
-    trigger: TriggerConfig
+    triggers: List[TriggerConfig]
     debug: bool = False
+    constant_keyword: Optional[ConstantKeyword] = None

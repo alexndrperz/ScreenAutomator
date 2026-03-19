@@ -13,9 +13,10 @@ class DebugVisualizer:
         self._saver    = DebugSaver()
 
     def visualize(self, config: AutomationConfig, index: int = 0) -> None:
-        """Captura la pantalla, marca search_region y trigger, y guarda la imagen."""
-        img = self._shooter.capture(2) 
+        """Captura la pantalla, marca search_region y triggers (con ID), y guarda la imagen."""
+        img = self._shooter.capture(2)
         self._renderer.draw_search_region(img, config.image.search_region)
-        self._renderer.draw_trigger(img, config.trigger)
+        for trigger_id, trigger in enumerate(config.triggers, start=1):
+            self._renderer.draw_trigger(img, trigger, trigger_id)
         path = self._saver.save(img, index)
         print(f"[Debug #{index}] Screenshot guardado en: {path}")

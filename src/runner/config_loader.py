@@ -4,6 +4,7 @@ from typing import List
 from ..models import AutomationConfig
 from .image_config_parser import ImageConfigParser
 from .trigger_config_parser import TriggerConfigParser
+from .constant_keyword_parser import ConstantKeywordParser
 
 
 class ConfigLoader:
@@ -12,6 +13,7 @@ class ConfigLoader:
     def __init__(self) -> None:
         self._image_parser   = ImageConfigParser()
         self._trigger_parser = TriggerConfigParser()
+        self._keyword_parser = ConstantKeywordParser()
 
     def load(self, path: str) -> List[AutomationConfig]:
         """Carga el JSON y retorna todas las configuraciones de automatización."""
@@ -25,8 +27,11 @@ class ConfigLoader:
 
     def _assemble(self, data: dict) -> AutomationConfig:
         """Construye un AutomationConfig completo desde un objeto del JSON."""
+        triggers = [self._trigger_parser.parse(t) for t in data["triggers"]]
+        keyword_data = data.get("constant_keyword")
         return AutomationConfig(
             image=self._image_parser.parse(data["image"]),
-            trigger=self._trigger_parser.parse(data["trigger"]),
-            debug=bool(data.get("debug", False))
+            triggers=triggers,
+            debug=bool(data.get("debug", False)),
+            constant_keyword=self._keyword_parser.parse(keyword_data) if keyword_data else None
         )

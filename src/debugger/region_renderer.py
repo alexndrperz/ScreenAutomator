@@ -25,8 +25,8 @@ class RegionRenderer:
             width=LINE_WIDTH
         )
 
-    def draw_trigger(self, img: Image.Image, trigger: TriggerConfig) -> None:
-        """Dibuja un rectángulo azul centrado en las coordenadas del trigger."""
+    def draw_trigger(self, img: Image.Image, trigger: TriggerConfig, trigger_id: int) -> None:
+        """Dibuja un rectángulo azul con su ID centrado en las coordenadas del trigger."""
         draw = ImageDraw.Draw(img)
         x, y = trigger.x, trigger.y
         draw.rectangle(
@@ -35,3 +35,4 @@ class RegionRenderer:
             outline=TRIGGER_COLOR,
             width=LINE_WIDTH
         )
+        draw.text((x - TRIGGER_HALF + 3, y - TRIGGER_HALF + 2), str(trigger_id), fill=TRIGGER_COLOR)
