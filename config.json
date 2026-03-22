@@ -1,8 +1,8 @@
 [
   {
-    "debug": true,
+    "debug": false,
     "image": {
-      "path": "assets\\target.jpg",
+      "path": "assets\\target.png",
       "search_region": {
         "x1": 1000,
         "y1": 100,
@@ -13,21 +13,21 @@
     "triggers": [
       {
         "x": 1850,
-        "y": 740,
+        "y": 640,
         "speed": 0.4,
         "click_type": "left",
         "time": 0
       },
       {
-        "x": 960,
-        "y": 540,
+        "x": 1850,
+        "y": 440,
         "speed": 0.3,
         "click_type": "left",
-        "time": 5
+        "time": 60
       }
     ],
     "constant_keyword": {
-      "keys": ["a", "enter"],
+      "keys": ["alt","left"],
       "interval_seconds": 2
     }
   }

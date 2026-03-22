@@ -8,6 +8,7 @@ class MouseController:
     """Controla el movimiento y los clicks del mouse."""
 
     def __init__(self, click_handler: ClickHandler) -> None:
+        # pyautogui.FAILSAFE = False
         self._clicker = click_handler
 
     def move_to(self, point: Waypoint, duration: float = 0.3) -> None:

@@ -12,3 +12,10 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+
+
+# Observaciones:
+# - Se debe añadir un trigger que haga cambio a temp 5m 
+# - Al momento del click debe tirar un cap 
+# - Debe haber otros tiggers que mueven el mouse de los botones

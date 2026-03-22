@@ -10,7 +10,7 @@ from .mouse_controller import MouseController
 from .constant_keyword_worker import ConstantKeywordWorker
 
 
-ESPERA_ENTRE_CICLOS = 60  # segundos entre repeticiones del ciclo completo
+ESPERA_ENTRE_CICLOS = 0  # segundos entre repeticiones del ciclo completo
 
 
 class AutomationRunner:
