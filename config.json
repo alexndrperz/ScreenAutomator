@@ -29,6 +29,13 @@
     "constant_keyword": {
       "keys": ["alt","left"],
       "interval_seconds": 2
+    },
+    "center_panel": {
+      "x": 960,
+      "y": 540,
+      "speed": 0.3,
+      "click_type": "none",
+      "time": 0
     }
   }
 ]

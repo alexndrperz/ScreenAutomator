@@ -49,3 +49,4 @@ class AutomationConfig:
     triggers: List[TriggerConfig]
     debug: bool = False
     constant_keyword: Optional[ConstantKeyword] = None
+    center_panel: Optional[TriggerConfig] = None

@@ -13,14 +13,14 @@ class DebugSaver:
     def __init__(self, output_dir: str = OUTPUT_DIR) -> None:
         self._output_dir = output_dir
 
-    def save(self, img: Image.Image, index: int) -> str:
+    def save(self, img: Image.Image, index: int, prefix: str = "debug") -> str:
         """Guarda la imagen en debug/ con nombre único basado en timestamp e índice."""
         os.makedirs(self._output_dir, exist_ok=True)
-        path = os.path.join(self._output_dir, self._build_filename(index))
+        path = os.path.join(self._output_dir, self._build_filename(index, prefix))
         img.save(path)
         return path
 
-    def _build_filename(self, index: int) -> str:
-        """Genera el nombre del archivo con formato debug_YYYYMMDD_HHMMSS_<index>.png."""
-        timestamp = datetime.now().strftime("%Y%m%d")
-        return f"debug_{timestamp}_{index}.png"
+    def _build_filename(self, index: int, prefix: str = "debug") -> str:
+        """Genera el nombre del archivo con formato <prefix>_YYYYMMDD_HHMMSS_<index>.png."""
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        return f"{prefix}_{timestamp}_{index}.png"

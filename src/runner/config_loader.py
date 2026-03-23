@@ -29,9 +29,11 @@ class ConfigLoader:
         """Construye un AutomationConfig completo desde un objeto del JSON."""
         triggers = [self._trigger_parser.parse(t) for t in data["triggers"]]
         keyword_data = data.get("constant_keyword")
+        center_panel_data = data.get("center_panel")
         return AutomationConfig(
             image=self._image_parser.parse(data["image"]),
             triggers=triggers,
             debug=bool(data.get("debug", False)),
-            constant_keyword=self._keyword_parser.parse(keyword_data) if keyword_data else None
+            constant_keyword=self._keyword_parser.parse(keyword_data) if keyword_data else None,
+            center_panel=self._trigger_parser.parse(center_panel_data) if center_panel_data else None
         )
