@@ -22,5 +22,5 @@ class DebugSaver:
 
     def _build_filename(self, index: int, prefix: str = "debug") -> str:
         """Genera el nombre del archivo con formato <prefix>_YYYYMMDD_HHMMSS_<index>.png."""
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        timestamp = datetime.now().strftime("%Y%m%d")
         return f"{prefix}_{timestamp}_{index}.png"

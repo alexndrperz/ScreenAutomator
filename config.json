@@ -19,12 +19,27 @@
         "time": 0
       },
       {
-        "x": 1850,
+        "x": 1850,  
         "y": 440,
         "speed": 0.3,
         "click_type": "left",
-        "time": 60
+        "time": 50
+      },
+      {
+        "x": 135,
+        "y": 850,
+        "speed": 0.3,
+        "click_type": "left",
+        "time": 5
+      },
+      {
+        "x": 400,
+        "y": 810,
+        "speed": 0.3,
+        "click_type": "left",
+        "time": 5
       }
+
     ],
     "constant_keyword": {
       "keys": ["alt","left"],
