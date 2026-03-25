@@ -1,5 +1,6 @@
 debug/
 CLAUDE**
+.claude/
 __pycache__/
 *.pyc
 *.pyo
