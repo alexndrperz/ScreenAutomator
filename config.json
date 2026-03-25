@@ -51,6 +51,9 @@
       "speed": 0.3,
       "click_type": "none",
       "time": 0
+    },
+    "periodic_capture": {
+      "interval_seconds": 30
     }
   }
 ]

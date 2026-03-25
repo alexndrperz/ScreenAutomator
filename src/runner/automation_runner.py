@@ -1,71 +1,71 @@
 import time
-from typing import List, Optional
+from typing import List, Optional, Set
 
 from ..models import AutomationConfig, ImageConfig, TriggerConfig, Waypoint
 from ..debugger.debug_visualizer import DebugVisualizer
-from ..debugger.screenshooter import Screenshooter
-from ..debugger.debug_saver import DebugSaver
 from .config_loader import ConfigLoader
 from .image_locator import ImageLocator
 from .click_handler import ClickHandler
 from .mouse_controller import MouseController
 from .constant_keyword_worker import ConstantKeywordWorker
+from .periodic_capture_worker import PeriodicCaptureWorker
 
 
-ESPERA_ENTRE_CICLOS = 0     # segundos entre repeticiones del ciclo completo
-CAPTURE_ON_MATCH    = True  # captura pantalla cada vez que se detecta la imagen
-CENTER_PANEL_THRESHOLD = 5  # segundos; si el próximo trigger está a más de esto, ir a center_panel
+ESPERA_ENTRE_CICLOS    = 0     # segundos entre repeticiones del ciclo completo
+CAPTURE_ON_MATCH       = True  # captura pantalla cada vez que se detecta la imagen
+CENTER_PANEL_THRESHOLD = 5     # segundos; si el próximo trigger está a más de esto, ir a center_panel
 
 
 class AutomationRunner:
     """Orquesta la carga del JSON y la ejecución de cada automatización."""
 
     def __init__(self) -> None:
-        self._loader     = ConfigLoader()
-        self._locator    = ImageLocator()
-        self._mouse      = MouseController(ClickHandler())
-        self._visualizer = DebugVisualizer()
-        self._shooter    = Screenshooter()
-        self._saver      = DebugSaver()
+        self._loader        = ConfigLoader()
+        self._locator       = ImageLocator()
+        self._mouse         = MouseController(ClickHandler())
+        self._visualizer    = DebugVisualizer()
+        self._debug_done: Set[int] = set()  # índices de configs debug ya ejecutados
 
     def run(self, json_path: str) -> None:
-        """Carga el JSON, arranca los workers de teclado y repite el ciclo indefinidamente."""
+        """Carga el JSON, arranca los workers y repite el ciclo indefinidamente."""
         configs = self._loader.load(json_path)
-        self._start_keyword_workers(configs)
+        self._start_workers(configs)
         while True:
             for index, config in enumerate(configs):
                 self._execute(config, index)
             self._esperar_ciclo()
 
-    def _start_keyword_workers(self, configs: List[AutomationConfig]) -> None:
-        """Arranca un ConstantKeywordWorker por cada automatización que lo defina."""
-        for config in configs:
+    def _start_workers(self, configs: List[AutomationConfig]) -> None:
+        """Arranca los workers de teclado y captura periódica por cada automatización que los defina."""
+        for index, config in enumerate(configs):
             if config.constant_keyword:
                 ConstantKeywordWorker(config.constant_keyword).start()
+            if config.periodic_capture:
+                PeriodicCaptureWorker(config.periodic_capture, index).start()
 
     def _esperar_ciclo(self) -> None:
-        """Espera 1 minuto antes de reiniciar el ciclo completo."""
+        """Espera antes de reiniciar el ciclo completo."""
         time.sleep(ESPERA_ENTRE_CICLOS)
 
     def _execute(self, config: AutomationConfig, index: int) -> None:
-        """Despacha la automatización: modo debug o ejecución normal."""
+        """Despacha la automatización: modo debug (una vez) o ejecución normal."""
         if config.debug:
-            self._visualizer.visualize(config, index)
+            if index not in self._debug_done:
+                self._visualizer.visualize(config, index)
+                self._debug_done.add(index)
             return
         if self._esperar_imagen(config.image):
             if CAPTURE_ON_MATCH:
-                self._capture_match(index)
+                self._capture_match(config, index)
             self._fire_all(config.triggers, config.center_panel)
 
     def _esperar_imagen(self, image_cfg: ImageConfig) -> bool:
         """Espera hasta que la imagen sea visible en pantalla, reintentando cada segundo."""
         return self._locator.esperar_hasta_encontrar(image_cfg.path, image_cfg.search_region)
 
-    def _capture_match(self, index: int) -> None:
-        """Captura la pantalla al momento de detectar la imagen y la guarda con prefijo 'match'."""
-        img = self._shooter.capture()
-        path = self._saver.save(img, index, prefix="match")
-        print(f"[Match #{index}] Captura guardada en: {path}")
+    def _capture_match(self, config: AutomationConfig, index: int) -> None:
+        """Captura la pantalla al detectar imagen, con los mismos overlays que el modo debug."""
+        self._visualizer.capture_match(config, index)
 
     def _fire_all(self, triggers: List[TriggerConfig], center_panel: Optional[TriggerConfig] = None) -> None:
         """Ejecuta todos los triggers en secuencia, respetando el delay de cada uno.

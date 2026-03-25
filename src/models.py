@@ -43,6 +43,12 @@ class ConstantKeyword:
 
 
 @dataclass
+class PeriodicCapture:
+    """Captura limpia de pantalla cada N segundos en segundo plano."""
+    interval_seconds: float
+
+
+@dataclass
 class AutomationConfig:
     """Configuración completa de una automatización: imagen, triggers y modo debug."""
     image: ImageConfig
@@ -50,3 +56,4 @@ class AutomationConfig:
     debug: bool = False
     constant_keyword: Optional[ConstantKeyword] = None
     center_panel: Optional[TriggerConfig] = None
+    periodic_capture: Optional[PeriodicCapture] = None

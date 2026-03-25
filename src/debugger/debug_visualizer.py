@@ -20,3 +20,12 @@ class DebugVisualizer:
             self._renderer.draw_trigger(img, trigger, trigger_id)
         path = self._saver.save(img, index)
         print(f"[Debug #{index}] Screenshot guardado en: {path}")
+
+    def capture_match(self, config: AutomationConfig, index: int = 0) -> None:
+        """Captura pantalla al detectar imagen, dibuja overlays y guarda con prefijo 'match'."""
+        img = self._shooter.capture()
+        self._renderer.draw_search_region(img, config.image.search_region)
+        for trigger_id, trigger in enumerate(config.triggers, start=1):
+            self._renderer.draw_trigger(img, trigger, trigger_id)
+        path = self._saver.save(img, index, prefix="match")
+        print(f"[Match #{index}] Captura guardada en: {path}")
