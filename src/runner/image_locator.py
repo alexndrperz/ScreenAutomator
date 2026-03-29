@@ -10,7 +10,7 @@ from ..models import SearchRegion
 class ImageLocator:
     """Busca una imagen en pantalla, opcionalmente dentro de una región."""
 
-    CONFIDENCE = 0.85
+    CONFIDENCE = 0.50       
     INTERVALO_REINTENTO = 1  # segundos entre reintentos
 
     def esperar_hasta_encontrar(self, image_path: str, region: Optional[SearchRegion]) -> bool:

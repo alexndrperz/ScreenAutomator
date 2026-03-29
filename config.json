@@ -1,12 +1,12 @@
 [
   {
-    "debug": true,
+    "debug": false,
     "image": {
       "path": "assets\\target.png",
       "search_region": {
-        "x1": 1000,
+        "x1": 1100,
         "y1": 100,
-        "x2": 1100,
+        "x2": 1200,
         "y2": 900
       }
     },
