@@ -23,10 +23,10 @@
         "y": 440,
         "speed": 0.3,
         "click_type": "left",
-        "time": 50
+        "time": 30
       },
       {
-        "x": 135,
+        "x": 130,
         "y": 850,
         "speed": 0.3,
         "click_type": "left",
