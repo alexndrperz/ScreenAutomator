@@ -19,9 +19,16 @@ class SearchRegion:
 
 
 @dataclass
-class ImageConfig:
-    """Configuración de la imagen a detectar en pantalla."""
+class ImageEntry:
+    """Par identificador + ruta de una imagen a detectar."""
+    id: str
     path: str
+
+
+@dataclass
+class ImageConfig:
+    """Configuración de la/s imagen/es a detectar en pantalla."""
+    images: List[ImageEntry]
     search_region: Optional[SearchRegion] = None
 
 
@@ -32,7 +39,8 @@ class TriggerConfig:
     y: float
     speed: float
     click_type: str
-    time: float = 0  # segundos de espera desde el trigger anterior
+    time: float = 0          # segundos de espera desde el trigger anterior
+    just_when_see: Optional[str] = None  # id de imagen requerida; None = indiferente
 
 
 @dataclass
@@ -57,3 +65,4 @@ class AutomationConfig:
     constant_keyword: Optional[ConstantKeyword] = None
     center_panel: Optional[TriggerConfig] = None
     periodic_capture: Optional[PeriodicCapture] = None
+    max_runs: Optional[int] = None  # ciclos máximos; None = sin límite

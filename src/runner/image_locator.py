@@ -1,31 +1,27 @@
 import os
 import time
-from typing import Optional
+from typing import List, Optional
 
 import pyautogui
 
-from ..models import SearchRegion
+from ..models import ImageEntry, SearchRegion
 
 
 class ImageLocator:
     """Busca una imagen en pantalla, opcionalmente dentro de una región."""
 
-    CONFIDENCE = 0.50       
+    CONFIDENCE = 0.50
     INTERVALO_REINTENTO = 0   #segundos
 
-    def esperar_hasta_encontrar(self, image_path: str, region: Optional[SearchRegion]) -> bool:
-        """Busca la imagen cada segundo hasta encontrarla en pantalla."""
+    def esperar_hasta_encontrar(self, images: List[ImageEntry], region: Optional[SearchRegion]) -> str:
+        """Busca repetidamente hasta encontrar cualquiera de las imágenes; retorna el id encontrado."""
         search_region = self._to_region(region) if region else None
         while True:
-            if self._locate(image_path, search_region) is not None:
-                print(f"Imagen '{image_path}' encontrada en pantalla.")
-                return True
+            for entry in images:
+                if self._locate(entry.path, search_region) is not None:
+                    print(f"Imagen '{entry.id}' ({entry.path}) encontrada en pantalla.")
+                    return entry.id
             time.sleep(self.INTERVALO_REINTENTO)
-
-    def exists_on_screen(self, image_path: str, region: Optional[SearchRegion]) -> bool:
-        """Indica si la imagen es visible en el área de pantalla especificada."""
-        search_region = self._to_region(region) if region else None
-        return self._locate(image_path, search_region) is not None
 
     def _to_region(self, region: SearchRegion) -> tuple:
         """Convierte un SearchRegion al formato (x, y, width, height) de pyautogui."""

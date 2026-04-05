@@ -19,11 +19,6 @@ if __name__ == "__main__":
 
 
 # Pendiente
-# - Falta añadir coordenadas draws a imagen de match + 
-
-# - Hacer precision de imagen target .
-# -- Arreglar setup de tiempo que esta extrañamente en mala coordenada + 
-
-# - Primera prueba real con tecnica real 
-# - Trigger con captura de pantalla cada x tiempo + 
-# - Errores de loops de capturas, control de stop y adicionales + 
+# - Problema de que ante errores graves el programa se quede iterando
+# - Primera prueba real con tecnica real  
+# - Numero maximo tabs es 9

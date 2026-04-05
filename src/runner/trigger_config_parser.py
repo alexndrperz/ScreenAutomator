@@ -11,5 +11,6 @@ class TriggerConfigParser:
             y=float(data["y"]),
             speed=float(data["speed"]),
             click_type=data["click_type"],
-            time=float(data.get("time", 0))
+            time=float(data.get("time", 0)),
+            just_when_see=data.get("just_when_see")
         )

@@ -1,4 +1,4 @@
-from ..models import ImageConfig
+from ..models import ImageConfig, ImageEntry
 from .search_region_parser import SearchRegionParser
 
 
@@ -9,9 +9,10 @@ class ImageConfigParser:
         self._region_parser = SearchRegionParser()
 
     def parse(self, data: dict) -> ImageConfig:
-        """Extrae la ruta de imagen y la región de búsqueda opcional."""
+        """Extrae las entradas de imagen y la región de búsqueda opcional."""
         region_data = data.get("search_region")
+        images = [ImageEntry(id=entry["id"], path=entry["path"]) for entry in data["path"]]
         return ImageConfig(
-            path=data["path"],
+            images=images,
             search_region=self._region_parser.parse(region_data) if region_data else None
         )

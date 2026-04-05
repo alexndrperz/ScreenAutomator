@@ -33,11 +33,13 @@ class ConfigLoader:
         keyword_data = data.get("constant_keyword")
         center_panel_data   = data.get("center_panel")
         periodic_data       = data.get("periodic_capture")
+        max_runs_data = data.get("max_runs")
         return AutomationConfig(
             image=self._image_parser.parse(data["image"]),
             triggers=triggers,
             debug=bool(data.get("debug", False)),
             constant_keyword=self._keyword_parser.parse(keyword_data) if keyword_data else None,
             center_panel=self._trigger_parser.parse(center_panel_data) if center_panel_data else None,
-            periodic_capture=self._periodic_parser.parse(periodic_data) if periodic_data else None
+            periodic_capture=self._periodic_parser.parse(periodic_data) if periodic_data else None,
+            max_runs=int(max_runs_data) if max_runs_data is not None else None
         )

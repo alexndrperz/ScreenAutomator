@@ -25,6 +25,7 @@ class AutomationRunner:
         self._mouse         = MouseController(ClickHandler())
         self._visualizer    = DebugVisualizer()
         self._debug_done: Set[int] = set()  # índices de configs debug ya ejecutados
+        self._run_counts: dict = {}          # índice → ciclos ejecutados
 
     def run(self, json_path: str) -> None:
         """Carga el JSON, arranca los workers y repite el ciclo indefinidamente."""
@@ -54,26 +55,34 @@ class AutomationRunner:
                 self._visualizer.visualize(config, index)
                 self._debug_done.add(index)
             return
-        if self._esperar_imagen(config.image):
-            if CAPTURE_ON_MATCH:
-                self._capture_match(config, index)
-            self._fire_all(config.triggers, config.center_panel)
+        if config.max_runs is not None and self._run_counts.get(index, 0) >= config.max_runs:
+            return
+        found_id = self._esperar_imagen(config.image)
+        if CAPTURE_ON_MATCH:
+            self._capture_match(config, index)
+        self._fire_all(config.triggers, found_id, config.center_panel)
+        self._run_counts[index] = self._run_counts.get(index, 0) + 1
+        if config.max_runs is not None and self._run_counts[index] >= config.max_runs:
+            print(f"[Config #{index}] Límite de {config.max_runs} ciclo(s) alcanzado. Cerrando.")
+            raise SystemExit(0)
 
-    def _esperar_imagen(self, image_cfg: ImageConfig) -> bool:
-        """Espera hasta que la imagen sea visible en pantalla, reintentando cada segundo."""
-        return self._locator.esperar_hasta_encontrar(image_cfg.path, image_cfg.search_region)
+    def _esperar_imagen(self, image_cfg: ImageConfig) -> str:
+        """Espera hasta que alguna de las imágenes sea visible; retorna el id encontrado."""
+        return self._locator.esperar_hasta_encontrar(image_cfg.images, image_cfg.search_region)
 
     def _capture_match(self, config: AutomationConfig, index: int) -> None:
         """Captura la pantalla al detectar imagen, con los mismos overlays que el modo debug."""
         self._visualizer.capture_match(config, index)
 
-    def _fire_all(self, triggers: List[TriggerConfig], center_panel: Optional[TriggerConfig] = None) -> None:
-        """Ejecuta todos los triggers en secuencia, respetando el delay de cada uno.
+    def _fire_all(self, triggers: List[TriggerConfig], found_id: str, center_panel: Optional[TriggerConfig] = None) -> None:
+        """Ejecuta los triggers en secuencia; omite los que tengan just_when_see distinto al id encontrado.
 
         Si el delay de un trigger supera CENTER_PANEL_THRESHOLD segundos y hay center_panel
         configurado, mueve el mouse a esa posición de espera antes de dormir.
         """
         for trigger in triggers:
+            if trigger.just_when_see is not None and trigger.just_when_see != found_id:
+                continue
             if trigger.time > 0:
                 if center_panel and trigger.time > CENTER_PANEL_THRESHOLD:
                     self._mouse.move_to(Waypoint(center_panel.x, center_panel.y), center_panel.speed)
