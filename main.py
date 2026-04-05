@@ -22,7 +22,7 @@ if __name__ == "__main__":
 # - Falta añadir coordenadas draws a imagen de match + 
 
 # - Hacer precision de imagen target .
-# -- Arreglar setup de tiempo que esta extrañamente en mala coordenada
+# -- Arreglar setup de tiempo que esta extrañamente en mala coordenada + 
 
 # - Primera prueba real con tecnica real 
 # - Trigger con captura de pantalla cada x tiempo + 

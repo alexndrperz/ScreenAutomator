@@ -11,7 +11,7 @@ class ImageLocator:
     """Busca una imagen en pantalla, opcionalmente dentro de una región."""
 
     CONFIDENCE = 0.50       
-    INTERVALO_REINTENTO = 1  # segundos entre reintentos
+    INTERVALO_REINTENTO = 0   #segundos
 
     def esperar_hasta_encontrar(self, image_path: str, region: Optional[SearchRegion]) -> bool:
         """Busca la imagen cada segundo hasta encontrarla en pantalla."""
@@ -42,5 +42,5 @@ class ImageLocator:
             full_path = os.path.join(os.getcwd(),"src", image_path)
             return pyautogui.locateCenterOnScreen(full_path, confidence=self.CONFIDENCE, region=region)
         except Exception as e:
-            print(f"Error al buscar la imagen '{image_path}': {e}")
+            # print(f"Error al buscar la imagen '{image_path}': {e}")
             return None

@@ -14,7 +14,7 @@
       {
         "x": 1850,
         "y": 640,
-        "speed": 0.4,
+        "speed": 0.01,
         "click_type": "left",
         "time": 0
       },
@@ -30,14 +30,14 @@
         "y": 850,
         "speed": 0.3,
         "click_type": "left",
-        "time": 5
+        "time": 2
       },
       {
         "x": 400,
         "y": 810,
         "speed": 0.3,
         "click_type": "left",
-        "time": 5
+        "time": 2
       }
 
     ],
