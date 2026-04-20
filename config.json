@@ -1,7 +1,7 @@
 [
   {
     "debug": false,
-    "max_runs": 2,
+    "max_runs": 9,
     "image": {
       "path": [
         { "id": "red", "path": "assets\\red.png" },
